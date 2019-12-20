@@ -1,3 +1,5 @@
+libVimBackend.a
+test
 
 # Created by https://www.gitignore.io/api/vim,cmake
 # Edit at https://www.gitignore.io/?templates=vim,cmake
