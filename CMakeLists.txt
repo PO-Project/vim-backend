@@ -14,10 +14,10 @@ if (NOT CURSES_PANEL_LIBRARY)
 endif ()
 
 add_library(VimBackend STATIC
-    VimBackend
+    src/VimBackend
 )
 
-set_target_properties(VimBackend PROPERTIES PUBLIC_HEADER vimBackend.h)
+target_include_directories(VimBackend PUBLIC include common-interface)
 target_include_directories(VimBackend PRIVATE ${CURSES_INCLUDE_DIRS})
 target_link_libraries(VimBackend ${CURSES_LIBRARIES} ${CURSES_PANEL_LIBRARY})
 

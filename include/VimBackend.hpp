@@ -4,7 +4,7 @@
 #include <string>
 #include <functional>
 
-#include "common-interface/BackendBase.hpp"
+#include "BackendBase.hpp"
 
 namespace backends
 {
