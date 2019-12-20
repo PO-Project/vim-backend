@@ -18,4 +18,4 @@ jobs:
     - name: build lib
       run: cmake --build .
     - name: build testTool
-      run: cmake .
+      run: cmake --build . --target test
