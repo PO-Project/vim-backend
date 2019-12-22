@@ -5,8 +5,8 @@
 #include <ncurses.h>
 #include <panel.h>
 
-#include "common-interface/ToolBase.hpp"
-#include "common-interface/BackendBase.hpp"
+#include "ToolBase.hpp"
+#include "BackendBase.hpp"
 
 namespace tools
 {

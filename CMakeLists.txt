@@ -25,5 +25,5 @@ add_executable(test
     testTool/main
 )
 set_target_properties(test PROPERTIES EXCLUDE_FROM_ALL TRUE)
-target_include_directories(test PRIVATE . ${CURSES_INCLUDE_DIRS})
+target_include_directories(test PRIVATE ${CURSES_INCLUDE_DIRS})
 target_link_libraries(test VimBackend ${CURSES_LIBRARIES} ${CURSES_PANEL_LIBRARY})
