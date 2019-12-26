@@ -15,6 +15,7 @@ endif ()
 
 add_library(VimBackend STATIC
     src/VimBackend
+    src/InputReader.cpp
 )
 
 target_include_directories(VimBackend PUBLIC include common-interface)

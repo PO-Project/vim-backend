@@ -2,6 +2,7 @@
 #define EXAMPLETOOL_H_
 
 #include <map>
+#include <cassert>
 #include <ncurses.h>
 #include <panel.h>
 
@@ -65,6 +66,11 @@ public:
             printText();
         },
                         "");
+        newBackend.bind("i", [this](){ text += "iii"; printText(); }, "");
+        newBackend.bind("dd!EDIT", [this](){ text += "dd"; printText(); }, "");
+        newBackend.bind("#vim#bbdd!EDIT", [this](){ text += "aadd"; printText(); }, "");
+        newBackend.bind("#not-vim#eee", [this](){ text += "ERROR"; printText(); }, "");
+        newBackend.bind("qqq!EDIT\%idk", [this](){ text += "qqq"; printText(); }, "");
     }
 
 private:
