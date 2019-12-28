@@ -19,7 +19,7 @@ add_library(VimBackend STATIC
 )
 
 target_include_directories(VimBackend PUBLIC include common-interface)
-target_include_directories(VimBackend PRIVATE ${CURSES_INCLUDE_DIRS})
+target_include_directories(VimBackend PRIVATE ${CURSES_INCLUDE_DIRS} /usr/include/ncurses)
 target_link_libraries(VimBackend ${CURSES_LIBRARIES} ${CURSES_PANEL_LIBRARY})
 
 add_executable(test
