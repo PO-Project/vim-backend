@@ -39,7 +39,7 @@ private:
             return a.getKeys().size() > b.getKeys().size();
         }
     };
-    std::set<KeyCommand, commandCmp> commandSet;
+    std::multiset<KeyCommand, commandCmp> commandSet;
 };
 
 
