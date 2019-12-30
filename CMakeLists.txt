@@ -22,9 +22,9 @@ target_include_directories(VimBackend PUBLIC include common-interface)
 target_include_directories(VimBackend PRIVATE ${CURSES_INCLUDE_DIRS} /usr/include/ncurses)
 target_link_libraries(VimBackend ${CURSES_LIBRARIES} ${CURSES_PANEL_LIBRARY})
 
-add_executable(test
+add_executable(test_tool
     testTool/main
 )
-set_target_properties(test PROPERTIES EXCLUDE_FROM_ALL TRUE)
-target_include_directories(test PRIVATE ${CURSES_INCLUDE_DIRS})
-target_link_libraries(test VimBackend ${CURSES_LIBRARIES} ${CURSES_PANEL_LIBRARY})
+set_target_properties(test_tool PROPERTIES EXCLUDE_FROM_ALL TRUE)
+target_include_directories(test_tool PRIVATE ${CURSES_INCLUDE_DIRS} /usr/include/ncurses)
+target_link_libraries(test_tool VimBackend ${CURSES_LIBRARIES} ${CURSES_PANEL_LIBRARY})
