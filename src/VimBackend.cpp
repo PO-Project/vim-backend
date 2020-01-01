@@ -5,11 +5,16 @@
 
 #include "ToolBase.hpp"
 #include "CursesWindow.hpp"
+#include "StatusWindow.hpp"
 #include "InputReader.hpp"
 #include "Command.hpp"
 #include "KeyCommand.hpp"
 #include "CommandCreator.hpp"
 #include "KeyCommandContainer.hpp"
+#include "TextCommand.hpp"
+#include "TextCommandContainer.hpp"
+#include "VimBackend.hpp"
+
 
 #include <ncurses.h>
 
@@ -20,12 +25,16 @@ namespace backends
 struct VimBackend::Impl
 {
     bool edition = false;
+    bool text = false;
 
     std::function<void()> editionCallback;
 
     tools::ToolBase* tool;
 
     KeyCommandContainer keyCommandContainer;
+    TextCommandContainer textCommandContainer;
+
+    StatusWindow statusWindow;
 
     void bind(const std::string &command, std::function<void()> callback, const std::string &comment)
     {
@@ -37,7 +46,6 @@ struct VimBackend::Impl
             KeyCommand* keyPtr = dynamic_cast<KeyCommand*>((*maybeCommandPtr).get());
             if (keyPtr)
             {
-                std::cerr << keyPtr->getPrintableCommand() << std::endl;
                 if (keyPtr->getPrintableCommand() == "<EDITION>")
                     editionCallback = keyPtr->getCallback();
                 else
@@ -45,10 +53,11 @@ struct VimBackend::Impl
                     keyCommandContainer.add(std::move(*keyPtr));
                 }
             }
-        }
-        else
-        {
-            //TODO
+            TextCommand* textPtr = dynamic_cast<TextCommand*>((*maybeCommandPtr).get());
+            if (textPtr)
+            {
+                textCommandContainer.add(std::move(*textPtr));
+            }
         }
     }
 
@@ -79,6 +88,45 @@ struct VimBackend::Impl
                     editionCallback();
                 }
             }
+            else if (key == ":")
+            {
+                buffer.clear();
+                statusWindow.focus();
+                statusWindow.print(":");
+                text = true;
+            }
+            else if (text)
+            {
+                if (key == "<ENTER>")
+                {
+                    statusWindow.print("[" + buffer + "]");
+                    statusWindow.moveToBottom();
+                    CursesWindow::update();
+                    statusWindow.clear();
+                    statusWindow.print(textCommandContainer.readBuffer(buffer, *tool));
+                    buffer.clear(); 
+                    text = false;
+                }
+                else if (key == "<ESC>")
+                {
+                    buffer.clear();
+                    text = false;
+                    statusWindow.clear();
+                    statusWindow.moveToBottom();
+                }
+                else
+                {
+                    if (key == "<DEL>")
+                    {
+                        if (!buffer.empty())
+                            buffer.pop_back();
+                        statusWindow.print(":" + buffer);
+                    }
+                    else if (key.size() == 1)
+                        buffer += key;
+                    statusWindow.print(":" + buffer);
+                }
+            }
             else
             {
                 buffer += key;
@@ -90,7 +138,6 @@ struct VimBackend::Impl
 
 VimBackend::VimBackend()
 {
-    // todo move this to nice place
     initscr();
     cbreak();
     keypad(stdscr, true);

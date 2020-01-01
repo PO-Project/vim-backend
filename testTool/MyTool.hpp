@@ -66,11 +66,15 @@ public:
             printText();
         },
                         "");
-        newBackend.bind("i", [this](){ text += "iii"; printText(); }, "");
+        newBackend.bind("open", [this](){ text += "open"; printText(); }, "");
+        // newBackend.bind("i", [this](){ text += "iii"; printText(); }, "");
         newBackend.bind("dd!EDIT", [this](){ text += "dd"; printText(); }, "");
         newBackend.bind("#vim#bbdd!EDIT", [this](){ text += "aadd"; printText(); }, "");
         newBackend.bind("#not-vim#eee", [this](){ text += "ERROR"; printText(); }, "");
         newBackend.bind("qqq!EDIT\%idk", [this](){ text += "qqq"; printText(); }, "");
+        newBackend.bind(":insert ${text}!EDIT\%idk", [this](){ text += getEntry("text"); printText(); }, "");
+        newBackend.bind(":insert2 ${text} ${text2}\%idk", [this](){ text += "1. \"" + getEntry("text") + "\" 2. \"" + getEntry("text2") + "\"\n" ; printText(); }, "");
+        newBackend.bind(":!EDIT\%idk", [this](){ text += getEntry("text"); printText(); }, "");
     }
 
 private:

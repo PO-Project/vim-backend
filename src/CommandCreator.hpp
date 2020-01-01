@@ -6,8 +6,10 @@
 #include <utility>
 #include <algorithm>
 #include <optional>
+#include <stdexcept>
 
 #include "KeyCommand.hpp"
+#include "TextCommand.hpp"
 
 namespace backends
 {
@@ -29,7 +31,6 @@ public:
         sequence.erase(std::min({sequence.size(), sequence.find('%'), sequence.find('.')}));
 
         static const std::string editS = "!EDIT";
-        bool edition = false;
         if (sequence.size() >= editS.size()
             && std::equal(editS.begin(), editS.end(), sequence.end() - editS.size()))
         {
@@ -40,8 +41,17 @@ public:
         if (sequence.empty())
             return std::optional<std::unique_ptr<Command>>();
 
-        // TODO
-        // if (sequence[0] == ':')
+        if (sequence[0] == ':')
+        {
+            try
+            {
+                return std::optional<std::unique_ptr<Command>>(new TextCommand(sequence, callback, comment));
+            }
+            catch (std::invalid_argument e)
+            {
+                return std::optional<std::unique_ptr<Command>>();
+            }
+        }
 
         return std::optional<std::unique_ptr<Command>>(new KeyCommand(sequence, callback, comment));
     }

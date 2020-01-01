@@ -17,11 +17,6 @@ public:
         return getPrintableCommand() + " - " + comment;
     }
 
-    void operator()() const
-    {
-        callback();
-    }
-
     const std::function<void()>& getCallback() const
     {
         return callback;

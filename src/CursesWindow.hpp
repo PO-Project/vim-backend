@@ -40,6 +40,14 @@ public:
     {
         mvwprintw(windowPtr, y, x, s.c_str());
     }
+    void moveCursor(int y, int x)
+    {
+        wmove(windowPtr, y, x);
+    }
+    void clear()
+    {
+        werase(windowPtr);
+    }
 
     void move(int y, int x)
     {
@@ -73,6 +81,7 @@ public:
         bottom_panel(panelPtr);
     }
 
+private:
     PANEL* panelPtr;
     WINDOW* windowPtr;
 

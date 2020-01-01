@@ -14,10 +14,15 @@ namespace backends
 class KeyCommand : public Command
 {
 public:
-    bool isCall(std::string buffer) const
+    bool isCall(const std::string& buffer) const
     {
         return buffer.size() >= keys.size()
             && std::equal(keys.begin(), keys.end(), buffer.end() - keys.size());
+    }
+
+    void operator()() const
+    {
+        callback();
     }
 
     std::string getKeys() const

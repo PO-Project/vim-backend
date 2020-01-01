@@ -2,10 +2,9 @@
 * resizing window
 * edition mode
 * key sequence binds 
-
-Not parameterized bindings with ':' should de facto work as key sequences (without backspace support and displaying buffer).
+* text commands (not tested enough)
 
 ### TODO
-* text commands
-* status line
+* write text commands' parameters parsing specification
 * help screen
+* refactor code (move text command buffering logic from main loop)
