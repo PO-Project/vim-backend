@@ -47,7 +47,7 @@ public:
             {
                 return std::optional<std::unique_ptr<Command>>(new TextCommand(sequence, callback, comment));
             }
-            catch (std::invalid_argument e)
+            catch (const std::invalid_argument& e)
             {
                 return std::optional<std::unique_ptr<Command>>();
             }

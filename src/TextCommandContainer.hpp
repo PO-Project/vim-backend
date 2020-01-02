@@ -36,7 +36,7 @@ public:
             it->second(buffer, tool);
             return "";
         }
-        catch (std::invalid_argument e)
+        catch (const std::invalid_argument &e)
         {
             return e.what();
         }
