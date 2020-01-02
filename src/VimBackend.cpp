@@ -27,6 +27,8 @@ struct VimBackend::Impl
     bool edition = false;
     bool text = false;
 
+    bool tryQuit = false;
+
     std::function<void()> editionCallback;
 
     tools::ToolBase* tool;
@@ -102,7 +104,6 @@ struct VimBackend::Impl
                     statusWindow.print("[" + buffer + "]");
                     statusWindow.moveToBottom();
                     CursesWindow::update();
-                    statusWindow.clear();
                     statusWindow.print(textCommandContainer.readBuffer(buffer, *tool));
                     buffer.clear(); 
                     text = false;
@@ -132,7 +133,16 @@ struct VimBackend::Impl
                 buffer += key;
                 keyCommandContainer.readBuffer(buffer);
             }
+            if (tryQuit)
+            {
+                tryQuit = false;
+                if (tool->getEntry("IS_SAVED") == "NO")
+                    statusWindow.print("Cannot quit, file not saved");
+                else
+                    break;
+            }
         }
+
     }
 };
 
@@ -145,6 +155,8 @@ VimBackend::VimBackend()
     set_escdelay(25);
 
     pImpl = std::unique_ptr<Impl>(new Impl);
+
+    pImpl->bind(":quit", [this]{ pImpl->tryQuit = true; }, "quit application");
 }
 
 VimBackend::~VimBackend()
