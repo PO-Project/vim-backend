@@ -42,7 +42,7 @@ public:
             }
             else
             {
-                size_t endSpace = std::min(callString.size(), findNotEscaped(callString, ' ', p+1));
+                size_t endSpace = std::min(callString.size(), findNotEscaped(callString, ' ', p));
                 arguments.emplace_back(callString.substr(p, endSpace - p));
                 p = endSpace + 1;
             }
@@ -58,11 +58,16 @@ private:
 
     static size_t findNotEscaped(const std::string& s, char c, size_t pos = 0)
     {
-        while (((pos = s.find(c, pos))) < s.size())
+        while (pos < s.size())
         {
-            if (pos == 0 || s[pos - 1] != '\\')
-                return pos;
-            pos++;
+            if (s[pos] == '\\')
+                pos += 2;
+            else
+            {
+                if (s[pos] == c)
+                    return pos;
+                pos++;
+            }
         }
         return std::string::npos;
     }
@@ -73,8 +78,9 @@ private:
         while (j < s.size())
         {
             s[i] = s[j];
-            if (s[i] != '\\')
-                i++;
+            if (s[i] == '\\')
+                s[i] = s[++j];
+            i++;
             j++;
         }
         s.erase(i);

@@ -7,4 +7,5 @@
 ### TODO
 * write text commands' parameters parsing specification
 * help screen
-* refactor code (move text command buffering logic from main loop)
+* refactor code (move text command buffering logic from main loop, improve statusline)
+
