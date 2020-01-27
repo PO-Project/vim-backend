@@ -17,7 +17,7 @@ class KeyCommandContainer
 public:
     void add(KeyCommand command)
     {
-        commandSet.insert(std::move(command));
+        commandSet.emplace(std::move(command));
     }
     void readBuffer(std::string& buffer)
     {
@@ -28,6 +28,13 @@ public:
                 c();
                 return;
             }
+    }
+    std::string getHelpText()
+    {
+        std::string temp;
+        for(auto &i : commandSet)
+            temp += i.getHelpText();
+        return temp;
     }
 
 private:

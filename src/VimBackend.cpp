@@ -14,10 +14,10 @@
 #include "TextCommand.hpp"
 #include "TextCommandContainer.hpp"
 #include "VimBackend.hpp"
+#include "Pager.hpp"
 
 
 #include <ncurses.h>
-
 
 namespace backends
 {
@@ -38,6 +38,19 @@ struct VimBackend::Impl
 
     StatusWindow statusWindow;
 
+    Pager helpPager;
+    bool helpTextDirty = true;
+
+    void showHelp()
+    {
+        if (helpTextDirty)
+        {
+            helpPager.updateText("HELP:\n\n" + keyCommandContainer.getHelpText() + textCommandContainer.getHelpText());
+            helpTextDirty = false;
+        }
+        helpPager.show();
+    }
+
     void bind(const std::string &command, std::function<void()> callback, const std::string &comment)
     {
         auto maybeCommandPtr = CommandCreator::create(command, callback, comment, [this](){
@@ -45,6 +58,7 @@ struct VimBackend::Impl
         });
         if (maybeCommandPtr)
         {
+            helpTextDirty = true;
             KeyCommand* keyPtr = dynamic_cast<KeyCommand*>((*maybeCommandPtr).get());
             if (keyPtr)
             {
@@ -65,6 +79,7 @@ struct VimBackend::Impl
 
     void resizeWindows()
     {
+        statusWindow.fixAfterResize();
         tool->setCoordinates(LINES-1, COLS, 0, 0);
     }
 
@@ -157,6 +172,7 @@ VimBackend::VimBackend()
     pImpl = std::unique_ptr<Impl>(new Impl);
 
     pImpl->bind(":quit", [this]{ pImpl->tryQuit = true; }, "quit application");
+    pImpl->bind(":help", [this]{ pImpl->showHelp(); }, "show help message");
 }
 
 VimBackend::~VimBackend()

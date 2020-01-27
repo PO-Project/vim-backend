@@ -4,6 +4,8 @@
 #include <string>
 #include <unordered_map>
 
+#include <iostream>
+
 #include <ncurses.h>
 
 namespace backends
@@ -17,14 +19,18 @@ public:
     {
         static const std::unordered_map<int, std::string> notStandard =
         {
-            {10, "<ENTER>"},
             {27, "<ESC>"},
+            {10, "<ENTER>"},
             {KEY_BACKSPACE, "<DEL>"},
-            {KEY_RESIZE, resizeKey}
+            {KEY_UP, "<UARROW>"},
+            {KEY_DOWN, "<DARROW>"},
+            {KEY_LEFT, "<LARROW>"},
+            {KEY_RIGHT, "<RARROW>"}
         };
 
         int k = getch();
         // std::cerr << k << std::endl;
+        // std::cerr << KEY_ENTER << std::endl;
 
         auto it = notStandard.find(k);
         if (it != notStandard.end())

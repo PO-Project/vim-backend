@@ -41,18 +41,17 @@ public:
             return e.what();
         }
     }
+    std::string getHelpText()
+    {
+        std::string temp;
+        for(auto &i : commandMap)
+            temp += i.second.getHelpText();
+        return temp;
+    }
 
 private:
-    struct TextCommandCmp
-    {
-        bool operator()(const TextCommand& a, const TextCommand& b) const
-        {
-            return a.getBase() < b.getBase();
-        }
-    };
     std::map<std::string, TextCommand> commandMap;
 };
-
 
 } // namespace
 #endif

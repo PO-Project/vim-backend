@@ -14,7 +14,7 @@ class Command
 public:
     std::string getHelpText() const
     {
-        return getPrintableCommand() + " - " + comment;
+        return getPrintableCommand() + " - " + comment + '\n';
     }
 
     const std::function<void()>& getCallback() const
@@ -22,11 +22,11 @@ public:
         return callback;
     }
 
-    virtual std::string getPrintableCommand() const = 0;
-
 protected:
     Command(std::function<void()> _callback, std::string _comment)
         : callback(_callback), comment(_comment) {}
+
+    virtual std::string getPrintableCommand() const = 0;
 
     std::function<void()> callback;
     std::string comment;

@@ -27,15 +27,11 @@ public:
         callback();
     }
 
-    std::string getPrintableCommand() const override
-    {
-        return printableCommand;
-    }
     const std::string& getBase() const
     {
         return base;
     }
-    const std::vector<std::string>& getArguments()
+    const std::vector<std::string>& getArguments() const
     {
         return arguments;
     }
@@ -81,6 +77,11 @@ private:
         printableCommand = ":" + base;
         for(auto& i : arguments)
             printableCommand += " %{" + i + "}";
+    }
+
+    std::string getPrintableCommand() const override
+    {
+        return printableCommand;
     }
 };
 

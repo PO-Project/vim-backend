@@ -19,10 +19,19 @@ public:
             hide();
     }
     CursesWindow() : CursesWindow(0, 0, 0, 0, false) {};
+    CursesWindow(CursesWindow&& other) : windowPtr(other.windowPtr),
+        panelPtr(other.panelPtr), isHidden(other.isHidden)
+    {
+        other.panelPtr = nullptr;
+        other.windowPtr = nullptr;
+    }
     ~CursesWindow()
     {
-        del_panel(panelPtr);
-        delwin(windowPtr);
+        if (panelPtr != nullptr)
+        {
+            del_panel(panelPtr);
+            delwin(windowPtr);
+        }
     }
 
     static void update()
@@ -33,7 +42,6 @@ public:
 
     void print(const std::string &s)
     {
-        top_panel(panelPtr);
         wprintw(windowPtr, s.c_str());
     }
     void print(const std::string &s, int y, int x)
@@ -53,21 +61,19 @@ public:
     {
         move_panel(panelPtr, y, x);
     }
-    void resize(int x, int y)
+    void resize(int y, int x)
     {
         wresize(windowPtr, y, x);
         replace_panel(panelPtr, windowPtr);
     }
 
-    void hide()
-    {
-        hide_panel(panelPtr);
-        isHidden = true;
-    }
     void focus()
     {
         if (isHidden)
+        {
+            isHidden = false;
             show_panel(panelPtr);
+        }
         else
             top_panel(panelPtr);
     }
@@ -80,12 +86,18 @@ public:
         }
         bottom_panel(panelPtr);
     }
+    void hide()
+    {
+        moveToBottom();
+        hide_panel(panelPtr);
+        isHidden = true;
+    }
 
 private:
     PANEL* panelPtr;
     WINDOW* windowPtr;
 
-    bool isHidden = true;
+    bool isHidden = false;
 };
 
 

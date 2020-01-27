@@ -13,10 +13,12 @@ namespace backends
 class StatusWindow
 {
 public:
-    StatusWindow()
-        : cursesWindow(1, COLS, LINES-1, 0, false) 
+    StatusWindow(bool hidden = false)
+        : cursesWindow(1, COLS, LINES-1, 0, hidden)
     {
         moveToBottom();
+        if (hidden)
+            hide();
     };
 
     void print(const std::string& s)
@@ -42,6 +44,10 @@ public:
     void moveToBottom()
     {
         cursesWindow.moveToBottom();
+    }
+    void hide()
+    {
+        cursesWindow.hide();
     }
 
 private:

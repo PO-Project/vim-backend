@@ -3,6 +3,7 @@
 * edition mode
 * key sequence binds 
 * text commands
+* help screen
 
 ### Command specification
 
@@ -36,6 +37,5 @@ to pass strings
 
 ### TODO
 * improve text commands' parameters parsing specification
-* help screen
 * refactor code (move text command buffering logic from main loop, improve statusline)
 
