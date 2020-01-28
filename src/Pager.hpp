@@ -135,7 +135,7 @@ private:
 
         textWindow.resize(std::min(size_t(LINES-1), lines.size()), COLS);
 
-        maxPos = std::max(0, int(lines.size() - LINES + 1));
+        maxPos = std::max(LINES-1, int(lines.size() - LINES + 1));
     }
 
     int pos = 0;
