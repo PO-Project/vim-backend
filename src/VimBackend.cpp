@@ -48,18 +48,20 @@ struct VimBackend::Impl
             helpPager.updateText("HELP:\n\n" + keyCommandContainer.getHelpText() + textCommandContainer.getHelpText());
             helpTextDirty = false;
         }
-        helpPager.show();
+        if (helpPager.show())
+            resizeWindows();
     }
 
     void bind(const std::string &command, std::function<void()> callback, const std::string &comment)
     {
-        auto maybeCommandPtr = CommandCreator::create(command, callback, comment, [this](){
+        auto commandPtr = CommandCreator::create(command, callback, comment, [this](){
             edition = true;
+            statusWindow.print("* EDITION *");
         });
-        if (maybeCommandPtr)
+        if (commandPtr)
         {
             helpTextDirty = true;
-            KeyCommand* keyPtr = dynamic_cast<KeyCommand*>((*maybeCommandPtr).get());
+            KeyCommand* keyPtr = dynamic_cast<KeyCommand*>(commandPtr.get());
             if (keyPtr)
             {
                 if (keyPtr->getPrintableCommand() == "<EDITION>")
@@ -69,7 +71,7 @@ struct VimBackend::Impl
                     keyCommandContainer.add(std::move(*keyPtr));
                 }
             }
-            TextCommand* textPtr = dynamic_cast<TextCommand*>((*maybeCommandPtr).get());
+            TextCommand* textPtr = dynamic_cast<TextCommand*>(commandPtr.get());
             if (textPtr)
             {
                 textCommandContainer.add(std::move(*textPtr));
@@ -86,7 +88,6 @@ struct VimBackend::Impl
     void run()
     {
         resizeWindows();
-
         std::string buffer;
 
         while (true)
@@ -98,7 +99,10 @@ struct VimBackend::Impl
             else if (edition)
             {
                 if (key == "<ESC>")
+                {
                     edition = false;
+                    statusWindow.print("");
+                }
                 else
                 {
                     tool->setEntry("KEY", key);
@@ -119,7 +123,8 @@ struct VimBackend::Impl
                     statusWindow.print("[" + buffer + "]");
                     statusWindow.moveToBottom();
                     CursesWindow::update();
-                    statusWindow.print(textCommandContainer.readBuffer(buffer, *tool));
+                    if (!edition)
+                        statusWindow.print(textCommandContainer.readBuffer(buffer, *tool));
                     buffer.clear(); 
                     text = false;
                 }

@@ -23,9 +23,10 @@ public:
 
     void print(const std::string& s)
     {
-        cursesWindow.clear();
-        cursesWindow.print(s, 0, 0);
+        text = s;
+        windowPrint();
     }
+
     void clear()
     {
         cursesWindow.clear();
@@ -35,6 +36,7 @@ public:
     {
         cursesWindow.resize(1, COLS);
         cursesWindow.move(LINES - 1, 0);
+        windowPrint();
     }
 
     void focus()
@@ -52,6 +54,13 @@ public:
 
 private:
     CursesWindow cursesWindow;
+    std::string text;
+
+    void windowPrint()
+    {
+        cursesWindow.clear();
+        cursesWindow.print(text, 0, 0);
+    }
 };
 
 

@@ -25,7 +25,8 @@ public:
             {KEY_UP, "<UARROW>"},
             {KEY_DOWN, "<DARROW>"},
             {KEY_LEFT, "<LARROW>"},
-            {KEY_RIGHT, "<RARROW>"}
+            {KEY_RIGHT, "<RARROW>"},
+            {KEY_RESIZE, resizeKey}
         };
 
         int k = getch();

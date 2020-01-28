@@ -17,13 +17,13 @@ namespace backends
 class CommandCreator
 {
 public:
-    static std::optional<std::unique_ptr<Command>> create(std::string sequence, std::function<void()> callback, std::string comment, std::function<void()> changeModeCallback)
+    static std::unique_ptr<Command> create(std::string sequence, std::function<void()> callback, std::string comment, std::function<void()> changeModeCallback)
     {
         if (sequence[0] == '#' && sequence.find('#', 1) != std::string::npos)
         {
             static const std::string name = "#vim#";
             if (sequence.substr(0, name.size()) != name)
-                return std::optional<std::unique_ptr<Command>>();
+                return std::unique_ptr<Command>();
             else
                 sequence = sequence.substr(name.size());
         }
@@ -39,21 +39,21 @@ public:
         }
 
         if (sequence.empty())
-            return std::optional<std::unique_ptr<Command>>();
+            return std::unique_ptr<Command>();
 
         if (sequence[0] == ':')
         {
             try
             {
-                return std::optional<std::unique_ptr<Command>>(new TextCommand(sequence, callback, comment));
+                return std::unique_ptr<Command>(new TextCommand(sequence, callback, comment));
             }
             catch (const std::invalid_argument& e)
             {
-                return std::optional<std::unique_ptr<Command>>();
+                return std::unique_ptr<Command>();
             }
         }
 
-        return std::optional<std::unique_ptr<Command>>(new KeyCommand(sequence, callback, comment));
+        return std::unique_ptr<Command>(new KeyCommand(sequence, callback, comment));
     }
 };
 

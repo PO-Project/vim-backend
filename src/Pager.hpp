@@ -14,35 +14,44 @@ class Pager
 public:
     Pager() : textWindow(LINES-1, COLS, 0, 0, true), statusWindow(true) {}
 
-    void show()
+    bool show()
     {
+        bool resized = false;
         pos = 0;
 
         textWindow.focus();
         statusWindow.focus();
+        checkResize();
 
         while (true)
         {
-            checkResize();
             updateStatus();
             write();
 
             CursesWindow::update();
             std::string input = InputReader::read();
 
-            if (input == "q")
+            if (input == InputReader::resizeKey)
+            {
+                resized = true;
+                checkResize();
+            }
+
+            if (input == "q" or input == "<ESC>")
                 break;
-            if (input == "k")
+            if (input == "k" or input == "<UARROW>")
             {
                 if (pos > 0)
                     pos--;
             }
-            else if (input == "j" && pos < maxPos)
+            else if ((input == "j" or input == "<DARROW>") && pos < maxPos)
                 pos++;
         }
 
         textWindow.hide();
         statusWindow.hide();
+
+        return resized;
     }
 
     void updateText(const std::string& newText)
@@ -73,7 +82,7 @@ private:
         }
         else
         {
-            static const std::string base = "*** scroll with j/k, quit with q ***";
+            static const std::string base = "*** scroll with j/k or arrows, quit with q/ESC ***";
             std::string counter;
             if (pos == maxPos)
                 counter = "[BOTTOM]";
