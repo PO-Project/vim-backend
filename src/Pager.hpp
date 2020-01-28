@@ -21,7 +21,7 @@ public:
 
         textWindow.focus();
         statusWindow.focus();
-        checkResize();
+        resize();
 
         while (true)
         {
@@ -34,7 +34,7 @@ public:
             if (input == InputReader::resizeKey)
             {
                 resized = true;
-                checkResize();
+                resize();
             }
 
             if (input == "q" or input == "<ESC>")
@@ -63,15 +63,15 @@ public:
     }
 
 private:
-    void checkResize()
+    void resize()
     {
         if (oldLINES != LINES || oldCOLS != COLS)
         {
-            makeLines();
-            statusWindow.fixAfterResize();
             oldLINES = LINES;
             oldCOLS = COLS;
+            makeLines();
         }
+        statusWindow.fixAfterResize();
     }
     void updateStatus()
     {
@@ -97,7 +97,7 @@ private:
     void write()
     {
         textWindow.clear();
-        for(size_t i = 0; i < LINES - 1 && i + pos < lines.size(); i++)
+        for(size_t i = 0; i < size_t(LINES - 1) && i + pos < lines.size(); i++)
             textWindow.print(lines[i + pos], i, 0);
     }
     void makeLines()
@@ -110,7 +110,7 @@ private:
             size_t next = std::min(text.find('\n', i), text.find(' ', i));
             if (text[next] == '\n')
             {
-                if (COLS >= lines.back().size() + (next - i))
+                if (size_t(COLS) >= lines.back().size() + (next - i))
                     lines.back() += text.substr(i, next-i);
                 else
                     lines.push_back(text.substr(i, next-i));
@@ -118,10 +118,10 @@ private:
             }
             else
             {
-                if (COLS >= lines.back().size() + (next - i))
+                if (size_t(COLS) >= lines.back().size() + (next - i))
                 {
                     lines.back() += text.substr(i, next-i);
-                    if (lines.back().size() != COLS)
+                    if (lines.back().size() != size_t(COLS))
                         lines.back() += " ";
                 }
                 else

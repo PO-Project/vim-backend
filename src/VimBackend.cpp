@@ -82,7 +82,10 @@ struct VimBackend::Impl
     void resizeWindows()
     {
         statusWindow.fixAfterResize();
+        statusWindow.moveToBottom();
         tool->setCoordinates(LINES-1, COLS, 0, 0);
+        if (text)
+            statusWindow.focus();
     }
 
     void run()

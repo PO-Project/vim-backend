@@ -94,8 +94,8 @@ public:
     }
 
 private:
-    PANEL* panelPtr;
     WINDOW* windowPtr;
+    PANEL* panelPtr;
 
     bool isHidden = false;
 };
