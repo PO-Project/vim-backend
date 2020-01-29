@@ -136,6 +136,7 @@ private:
 
 
         maxPos = std::max(0, int(lines.size() - LINES + 1));
+        pos = std::min(pos, maxPos);
     }
 
     int pos = 0;
