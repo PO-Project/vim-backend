@@ -76,7 +76,7 @@ private:
 
         printableCommand = ":" + base;
         for(auto& i : arguments)
-            printableCommand += " %{" + i + "}";
+            printableCommand += " ${" + i + "}";
     }
 
     std::string getPrintableCommand() const override

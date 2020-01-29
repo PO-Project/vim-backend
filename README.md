@@ -31,11 +31,3 @@ Bind command from example above could be executed by typing
 to pass strings 
 `a b`, `c d` and `' \`.
 
-
-
-
-
-### TODO
-* improve text commands' parameters parsing specification
-* refactor code (move text command buffering logic from main loop, improve statusline)
-
